@@ -22,7 +22,9 @@ class AppState extends ChangeNotifier {
     final loadedEntries = await db.loadEntries();
     final loadedSettings = await db.loadSettings();
 
-    if (loadedActivities.isEmpty && loadedEntries.isEmpty) {
+    if (loadedActivities.isEmpty &&
+        loadedEntries.isEmpty &&
+        loadedSettings == null) {
       final seeded = _seedData(db);
       for (final a in seeded.activities) {
         await db.upsertActivity(a);
@@ -120,6 +122,15 @@ class AppState extends ChangeNotifier {
   Future<void> updateSettings(AppSettings Function(AppSettings) updater) async {
     settings = updater(settings);
     notifyListeners();
+    await db.saveSettings(settings);
+  }
+
+  Future<void> removeAllData() async {
+    entries = [];
+    activities = [];
+    settings = AppSettings();
+    notifyListeners();
+    await db.clearAllData();
     await db.saveSettings(settings);
   }
 

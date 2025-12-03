@@ -153,6 +153,16 @@ class DatabaseService {
     );
   }
 
+  Future<void> clearAllData() async {
+    final db = _db;
+    if (db == null) return;
+    await db.transaction((txn) async {
+      await txn.delete('entries');
+      await txn.delete('activities');
+      await txn.delete('settings');
+    });
+  }
+
   Entry _mapToEntry(Map<String, Object?> r) {
     return Entry(
       id: r['id'] as String,

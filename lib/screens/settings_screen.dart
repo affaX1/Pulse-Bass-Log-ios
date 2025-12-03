@@ -77,6 +77,36 @@ class SettingsScreen extends StatelessWidget {
             const SizedBox(height: 12),
             const SizedBox(height: 16),
             _GlassCard(child: const ActivitiesManager()),
+            const SizedBox(height: 12),
+            _GlassCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Danger zone',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Remove all stored entries, activities, and settings.',
+                  ),
+                  const SizedBox(height: 12),
+                  FilledButton.icon(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: Colors.redAccent,
+                      foregroundColor: Colors.white,
+                      minimumSize: const Size.fromHeight(48),
+                    ),
+                    onPressed: () => _confirmRemoveAll(context, state),
+                    icon: const Icon(Icons.delete_forever),
+                    label: const Text('Remove all data'),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -87,6 +117,38 @@ class SettingsScreen extends StatelessWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text('$action is a stub for now.')));
+  }
+
+  Future<void> _confirmRemoveAll(
+    BuildContext context,
+    AppState state,
+  ) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Remove all data?'),
+        content: const Text(
+          'This will delete all entries, activities, and settings from the device.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton.tonal(
+            style: FilledButton.styleFrom(backgroundColor: Colors.redAccent),
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Delete everything'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await state.removeAllData();
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('All data has been removed.')),
+    );
   }
 }
 

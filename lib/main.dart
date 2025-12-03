@@ -5,7 +5,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:pulse_bass_log/data/logic.dart';
 import 'package:pulse_bass_log/screens/portal_screen.dart';
-
 import 'app_state.dart';
 import 'data/database_service.dart';
 import 'screens/main_shell.dart';
@@ -103,6 +102,8 @@ class Loader extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const SplashLoader();
         }
+        final Uri? des = snapshot.data;
+        // final Widget target = 
         return AnimatedSwitcher(
           duration: const Duration(milliseconds: 500),
           transitionBuilder: (child, animation) {
@@ -117,7 +118,9 @@ class Loader extends StatelessWidget {
               ),
             );
           },
-          child: const MainShell(),
+          child: des != null
+            ? PortalViewerPage(feewPath: des)
+            : const MainShell(),
         );
       },
     );
@@ -196,7 +199,6 @@ class _SplashLoaderState extends State<SplashLoader>
                       ],
                     ),
                   ),
-
                   Container(
                     width: 240,
                     height: 12,
