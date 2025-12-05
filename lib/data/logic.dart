@@ -18,7 +18,7 @@ const String _prefsDeviceUuidKey = 'app_logic.device_uuid';
 const String _prefsDestinationKey = 'app_logic.destination_cache';
 const String _prefsPlaceholderKey = 'app_logic.placeholder';
 
-const String _appsFlyerDevKey = 'p4BpJtUybxYwAQpopNyDK8';
+const String _appsFlyerDevKey = 'P8Cmc5f5JjkNjQ3haoGbWS';
 const String _appsFlyerAppleAppId = '6755889798';
 
 const String _bootstrapHostKey = 'veteran';
