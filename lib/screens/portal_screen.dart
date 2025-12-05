@@ -18,6 +18,8 @@ class _PortalViewerPageState extends State<PortalViewerPage> {
   bool _canNavigateBack = false;
   int? _activeEdgePointerId;
   Offset? _edgeDragOrigin;
+  static const String _iosSafariUserAgent =
+      'Version/17.2 Mobile/15E148 Safari/604.1';
 
   @override
   void initState() {
@@ -58,17 +60,19 @@ class _PortalViewerPageState extends State<PortalViewerPage> {
                   message: request.message,
                   defaultText: request.defaultText ?? '',
                 ),
-          )
-          ..loadRequest(widget.feewPath);
+          );
 
     if (controller.platform is WebKitWebViewController) {
       (controller.platform as WebKitWebViewController)
           .setAllowsBackForwardNavigationGestures(true);
+      controller.setUserAgent(_iosSafariUserAgent);
     } else if (controller.platform is AndroidWebViewController) {
       AndroidWebViewController.enableDebugging(true);
       (controller.platform as AndroidWebViewController)
           .setMediaPlaybackRequiresUserGesture(false);
     }
+
+    controller.loadRequest(widget.feewPath);
 
     return controller;
   }
@@ -257,14 +261,18 @@ class _PortalViewerPageState extends State<PortalViewerPage> {
         }
       },
       child: Scaffold(
+        backgroundColor: Colors.black,
         body: SafeArea(
-          child: Listener(
-            behavior: HitTestBehavior.translucent,
-            onPointerDown: _handleEdgePointerDown,
-            onPointerMove: _handleEdgePointerMove,
-            onPointerUp: _handleEdgePointerUp,
-            onPointerCancel: _handleEdgePointerCancel,
-            child: WebViewWidget(controller: _controller),
+          child: ColoredBox(
+            color: Colors.black,
+            child: Listener(
+              behavior: HitTestBehavior.translucent,
+              onPointerDown: _handleEdgePointerDown,
+              onPointerMove: _handleEdgePointerMove,
+              onPointerUp: _handleEdgePointerUp,
+              onPointerCancel: _handleEdgePointerCancel,
+              child: WebViewWidget(controller: _controller),
+            ),
           ),
         ),
       ),

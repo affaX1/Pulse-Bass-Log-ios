@@ -264,7 +264,6 @@ class AppLogic extends ChangeNotifier {
     }
     return '';
   }
-
   Future<String> _fetchAttToken() async {
     if (!Platform.isIOS) {
       return '';
