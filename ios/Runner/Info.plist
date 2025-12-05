@@ -26,6 +26,11 @@
 	<string>3</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>This app needs access to your camera to let you take and upload photos on web pages.</string>
 	<key>NSMicrophoneUsageDescription</key>
@@ -34,11 +39,6 @@
 	<string>This app needs access to your photo library to let you select and upload pictures on web pages.</string>
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>This app needs to send you notifications to keep you updated on important events and offers.</string>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
