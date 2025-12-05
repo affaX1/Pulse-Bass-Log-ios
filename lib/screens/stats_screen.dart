@@ -81,7 +81,8 @@ class StatsScreen extends StatelessWidget {
                     value: bestWeekday != null
                         ? weekdayName(bestWeekday.key)
                         : '—',
-                    color: bestWeekday != null ? moodColor(5) : Colors.white70,
+                    color:
+                        bestWeekday != null ? moodColor(moodScale) : Colors.white70,
                   ),
                 ],
               ),

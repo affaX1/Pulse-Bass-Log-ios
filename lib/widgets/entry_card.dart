@@ -71,7 +71,7 @@ class EntryCard extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      moodEmojis[entry.mood - 1],
+                      moodEmoji(entry.mood),
                       style: const TextStyle(fontSize: 22),
                     ),
                   ),

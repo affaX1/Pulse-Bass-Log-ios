@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -38,56 +39,83 @@ class MoodSelector extends StatelessWidget {
                 ).textTheme.titleSmall?.copyWith(color: Colors.white),
               ),
               const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(5, (index) {
-                  final selected = index + 1 == value;
-                  return GestureDetector(
-                    onTap: () => onChanged(index + 1),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 180),
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: selected
-                            ? Colors.white.withOpacity(0.12)
-                            : Colors.white.withOpacity(0.04),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: selected
-                              ? Colors.white.withOpacity(0.6)
-                              : Colors.white.withOpacity(0.18),
+              Builder(
+                builder: (_) {
+                  final chunks = _chunkedMoods();
+                  return Column(
+                    children: chunks.asMap().entries.map((entry) {
+                      final isLast = entry.key == chunks.length - 1;
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: isLast ? 0 : 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: entry.value.map((currentMood) {
+                            final selected = currentMood == value;
+                            return GestureDetector(
+                              onTap: () => onChanged(currentMood),
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 180),
+                                padding: const EdgeInsets.all(10),
+                                width: 64,
+                                decoration: BoxDecoration(
+                                  color: selected
+                                      ? Colors.white.withOpacity(0.12)
+                                      : Colors.white.withOpacity(0.04),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: selected
+                                        ? Colors.white.withOpacity(0.6)
+                                        : Colors.white.withOpacity(0.18),
+                                  ),
+                                  boxShadow: [
+                                    if (selected)
+                                      BoxShadow(
+                                        color: moodColor(currentMood)
+                                            .withOpacity(0.45),
+                                        blurRadius: 12,
+                                        offset: const Offset(0, 6),
+                                      ),
+                                  ],
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      moodEmoji(currentMood),
+                                      style: const TextStyle(fontSize: 22),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      '$currentMood',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelSmall
+                                          ?.copyWith(color: Colors.white70),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }).toList(),
                         ),
-                        boxShadow: [
-                          if (selected)
-                            BoxShadow(
-                              color: moodColor(index + 1).withOpacity(0.45),
-                              blurRadius: 12,
-                              offset: const Offset(0, 6),
-                            ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            moodEmojis[index],
-                            style: const TextStyle(fontSize: 24),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '${index + 1}',
-                            style: Theme.of(context).textTheme.labelSmall
-                                ?.copyWith(color: Colors.white70),
-                          ),
-                        ],
-                      ),
-                    ),
+                      );
+                    }).toList(),
                   );
-                }),
+                },
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  List<List<int>> _chunkedMoods() {
+    final moods = List<int>.generate(moodScale, (idx) => idx + 1);
+    final chunks = <List<int>>[];
+    for (int i = 0; i < moods.length; i += 5) {
+      chunks.add(moods.sublist(i, min(i + 5, moods.length)));
+    }
+    return chunks;
   }
 }

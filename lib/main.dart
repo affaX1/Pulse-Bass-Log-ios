@@ -18,10 +18,7 @@ Future<void> main() async {
     await FirebaseMessaging.instance.setAutoInitEnabled(true);
     await FirebaseMessaging.instance.getAPNSToken();
   }
-  runApp(MaterialApp(
-    home: PortalViewerPage(feewPath: Uri.parse( 'https://trkgflow.g2afse.com/click?pid=1&offer_id=11001')),
-  ));
-  // runApp(const FishBassApp());
+  runApp(const FishBassApp());
 }
 
 class FishBassApp extends StatefulWidget {

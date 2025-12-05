@@ -158,7 +158,6 @@ class AppLogic extends ChangeNotifier {
     final Uri requestUri = Uri.parse(
       'https://${entry.hostFragment}${entry.routeSuffix}?data=$encoded',
     );
-    debugPrint('Requesting destination from: $requestUri');
     final http.Response response = await _sendConfigRequest(requestUri);
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw Exception(

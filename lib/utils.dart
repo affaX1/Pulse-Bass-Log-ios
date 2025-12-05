@@ -1,16 +1,50 @@
 import 'package:flutter/material.dart';
 
-const moodEmojis = ['😖', '😕', '😐', '🙂', '🤩'];
-const moodLabels = ['Very bad', 'Bad', 'OK', 'Good', 'Excellent'];
+const moodEmojis = [
+  '😭',
+  '😣',
+  '😟',
+  '😕',
+  '😐',
+  '🙂',
+  '😊',
+  '😃',
+  '🤩',
+  '🥳',
+];
+const moodLabels = [
+  'Rock bottom',
+  'Really low',
+  'Down',
+  'Meh',
+  'Flat',
+  'Okay',
+  'Upbeat',
+  'Happy',
+  'Glowing',
+  'Euphoric',
+];
 const moodColors = [
-  Color(0xFFe04f5f),
-  Color(0xFFf28c57),
-  Color(0xFFf0c75e),
-  Color(0xFF6ec27f),
-  Color(0xFF3fa87f),
+  Color(0xFFd7263d),
+  Color(0xFFe34a4f),
+  Color(0xFFec7754),
+  Color(0xFFf2a35e),
+  Color(0xFFf5c46e),
+  Color(0xFFd1d979),
+  Color(0xFF9fce87),
+  Color(0xFF68c192),
+  Color(0xFF43ab8c),
+  Color(0xFF2f8d7a),
 ];
 
-Color moodColor(int mood) => moodColors[mood.clamp(1, 5) - 1];
+int moodScale = moodEmojis.length;
+
+Color moodColor(int mood) => moodColors[mood.clamp(1, moodColors.length) - 1];
+
+String moodEmoji(int mood) {
+  final index = (mood - 1).clamp(0, moodEmojis.length - 1);
+  return moodEmojis[index];
+}
 
 String formatDate(DateTime date) =>
     '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}';

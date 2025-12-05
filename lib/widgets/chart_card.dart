@@ -83,7 +83,7 @@ class _LineChartPainter extends CustomPainter {
     final minDate = sorted.first.date.millisecondsSinceEpoch.toDouble();
     final maxDate = sorted.last.date.millisecondsSinceEpoch.toDouble();
     final minValue = 1.0;
-    final maxValue = 5.0;
+    final maxValue = 10.0;
     final paint = Paint()
       ..color = color
       ..strokeWidth = 3
@@ -92,6 +92,7 @@ class _LineChartPainter extends CustomPainter {
     final path = Path();
     for (int i = 0; i < sorted.length; i++) {
       final point = sorted[i];
+      final boundedValue = point.value.clamp(minValue, maxValue);
       final x = maxDate == minDate
           ? 0.0
           : (point.date.millisecondsSinceEpoch - minDate) /
@@ -99,7 +100,7 @@ class _LineChartPainter extends CustomPainter {
                 size.width;
       final y =
           size.height -
-          ((point.value - minValue) / (maxValue - minValue) * size.height);
+          ((boundedValue - minValue) / (maxValue - minValue) * size.height);
       if (i == 0) {
         path.moveTo(x, y);
       } else {

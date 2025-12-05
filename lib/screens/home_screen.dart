@@ -251,7 +251,7 @@ class _QuickLogRow extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'One tap entry',
+                  'One tap entry · 10 moods',
                   style: Theme.of(
                     context,
                   ).textTheme.bodySmall?.copyWith(color: Colors.white70),
@@ -259,17 +259,39 @@ class _QuickLogRow extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(5, (idx) {
-                final mood = idx + 1;
-                return _MoodChip(mood: mood, onTap: () => onPick(mood));
-              }),
+            Builder(
+              builder: (_) {
+                final chunks = _chunkedMoods();
+                return Column(
+                  children: chunks.asMap().entries.map((entry) {
+                    final isLast = entry.key == chunks.length - 1;
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: isLast ? 0 : 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: entry.value
+                            .map((mood) =>
+                                _MoodChip(mood: mood, onTap: () => onPick(mood)))
+                            .toList(),
+                      ),
+                    );
+                  }).toList(),
+                );
+              },
             ),
           ],
         ),
       ),
     );
+  }
+
+  List<List<int>> _chunkedMoods() {
+    final moods = List<int>.generate(moodScale, (idx) => idx + 1);
+    final chunks = <List<int>>[];
+    for (int i = 0; i < moods.length; i += 5) {
+      chunks.add(moods.sublist(i, min(i + 5, moods.length)));
+    }
+    return chunks;
   }
 }
 
@@ -282,23 +304,27 @@ class _MoodChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: moodColor(mood).withOpacity(0.14),
-              shape: BoxShape.circle,
-              border: Border.all(color: moodColor(mood).withOpacity(0.4)),
+      child: SizedBox(
+        width: 62,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: moodColor(mood).withOpacity(0.14),
+                shape: BoxShape.circle,
+                border: Border.all(color: moodColor(mood).withOpacity(0.4)),
+              ),
+              child: Text(
+                moodEmoji(mood),
+                style: const TextStyle(fontSize: 22),
+              ),
             ),
-            child: Text(
-              moodEmojis[mood - 1],
-              style: const TextStyle(fontSize: 24),
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text('$mood', style: Theme.of(context).textTheme.labelSmall),
-        ],
+            const SizedBox(height: 4),
+            Text('$mood', style: Theme.of(context).textTheme.labelSmall),
+          ],
+        ),
       ),
     );
   }
